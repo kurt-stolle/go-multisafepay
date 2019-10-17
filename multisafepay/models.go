@@ -1,7 +1,5 @@
 package multisafepay
 
-import "time"
-
 // Response from the API, contains a boolean to indicate success
 type Response struct {
 	Success bool `json:"success"`
@@ -69,12 +67,12 @@ type PostOrderResponse struct {
 
 // Cost is a cost as presented in: https://docs.multisafepay.com/api/#retrieve-an-order
 type Cost struct {
-	TransactionID int       `json:"transaction_id"`
-	Description   string    `json:"description"`
-	Type          string    `json:"type"`
-	Status        string    `json:"status"`
-	Created       time.Time `json:"created"`
-	Amount        float64   `json:"amount"`
+	TransactionID int     `json:"transaction_id"`
+	Description   string  `json:"description"`
+	Type          string  `json:"type"`
+	Status        string  `json:"status"`
+	Created       Time    `json:"created"`
+	Amount        float64 `json:"amount"`
 }
 
 // GetOrderResponse is a response to GET /orders/{order_id}: https://docs.multisafepay.com/api/#retrieve-an-order
@@ -84,7 +82,7 @@ type GetOrderResponse struct {
 	Data struct {
 		TransactionID       int                    `json:"transaction_id"`
 		OrderID             string                 `json:"order_id"`
-		Created             time.Time              `json:"created"`
+		Created             Time                   `json:"created"`
 		Currency            string                 `json:"currency"`
 		Amount              int                    `json:"amount"`
 		Description         string                 `json:"description"`
@@ -94,19 +92,19 @@ type GetOrderResponse struct {
 		Reason              string                 `json:"reason"`
 		ReasonCode          string                 `json:"reason_code"`
 		FastCheckout        string                 `json:"fastcheckout"`
-		Modified            time.Time              `json:"modified"`
+		Modified            Time                   `json:"modified"`
 		Customer            *Customer              `json:"customer"`
 		PaymentDetails      map[string]interface{} `json:"payment_details"`
 		Costs               []Cost                 `json:"costs"`
 		RelatedTransactions []struct {
-			Amount        int       `json:"amount"`
-			Costs         []Cost    `json:"costs"`
-			Created       time.Time `json:"created"`
-			Currency      string    `json:"currency"`
-			Description   string    `json:"description"`
-			Modified      time.Time `json:"modified"`
-			Status        string    `json:"status"`
-			TransactionID int       `json:"transaction_id"`
+			Amount        int    `json:"amount"`
+			Costs         []Cost `json:"costs"`
+			Created       Time   `json:"created"`
+			Currency      string `json:"currency"`
+			Description   string `json:"description"`
+			Modified      Time   `json:"modified"`
+			Status        string `json:"status"`
+			TransactionID int    `json:"transaction_id"`
 		} `json:"related_transactions"`
 		PaymentMethods []map[string]interface{} `json:"payment_methods"`
 	}
