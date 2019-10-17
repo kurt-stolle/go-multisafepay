@@ -79,7 +79,7 @@ func (c *Client) Post(route string, data interface{}) (*http.Response, error) {
 }
 
 // CreateOrder creates a new order
-func (c *Client) CreateOrder(o *Order) (*PostOrderResponse, error) {
+func (c *Client) CreateOrder(o Order) (*PostOrderResponse, error) {
 	// Perform request to API
 	res, err := c.Post("/orders", o)
 	if err != nil {
