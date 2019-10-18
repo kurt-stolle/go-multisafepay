@@ -3,7 +3,6 @@ package multisafepay
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -45,15 +44,21 @@ func (c *Client) performRequest(req *http.Request) (io.ReadCloser, error) {
 	if res.StatusCode != http.StatusOK {
 		// Find error in the response body
 		var errData ErrorResponse
-		if err := json.NewDecoder(res.Body).Decode(errData); err != nil {
-			return nil, errors.New(
-				fmt.Sprintf("api responded with http status %d %s, but the error could not be decoded from the response body: %s",
-					res.StatusCode,
-					res.Status,
-					err.Error()))
+		if err := json.NewDecoder(res.Body).Decode(&errData); err != nil {
+			return nil, APIError{
+				Method:  req.Method,
+				URL:     req.RequestURI,
+				Status:  res.Status,
+				Message: "error could not be decoded: " + err.Error(),
+			}
 		}
 
-		return nil, errors.New(fmt.Sprintf("api responded with error: %s (code %d)", errData.ErrorInfo, errData.ErrorCode))
+		return nil, APIError{
+			Method:  req.Method,
+			URL:     req.RequestURI,
+			Status:  res.Status,
+			Message: fmt.Sprintf("%s (error %d)", errData.ErrorInfo, errData.ErrorCode),
+		}
 	}
 
 	// Return the response body
