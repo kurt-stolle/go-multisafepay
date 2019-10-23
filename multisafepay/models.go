@@ -60,7 +60,7 @@ type PostOrderResponse struct {
 	Response
 
 	Data struct {
-		OrderID    int    `json:"order_id"`
+		OrderID    ID     `json:"order_id"`
 		PaymentURL string `json:"payment_url,omitempty"`
 	} `json:"data"`
 }
@@ -80,7 +80,7 @@ type GetOrderResponse struct {
 	Response
 
 	Data struct {
-		TransactionID       int                    `json:"transaction_id"`
+		TransactionID       ID                    `json:"transaction_id"`
 		OrderID             string                 `json:"order_id"`
 		Created             Time                   `json:"created"`
 		Currency            string                 `json:"currency"`
@@ -104,7 +104,7 @@ type GetOrderResponse struct {
 			Description   string `json:"description"`
 			Modified      Time   `json:"modified"`
 			Status        string `json:"status"`
-			TransactionID int    `json:"transaction_id"`
+			TransactionID ID    `json:"transaction_id"`
 		} `json:"related_transactions"`
 		PaymentMethods []map[string]interface{} `json:"payment_methods"`
 	}
