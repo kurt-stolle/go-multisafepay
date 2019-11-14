@@ -43,7 +43,7 @@ type Customer struct {
 // Order structure, see: https://docs.multisafepay.com/api/#orders
 type Order struct {
 	Type           string          `json:"type,omitempty"`
-	OrderID        string          `json:"order_id,omitempty"`
+	OrderID        ID              `json:"order_id,omitempty"`
 	Gateway        string          `json:"gateway,omitempty"`
 	Currency       string          `json:"currency,omitempty"`
 	Amount         int             `json:"amount,omitempty"`
@@ -67,7 +67,7 @@ type PostOrderResponse struct {
 
 // Cost is a cost as presented in: https://docs.multisafepay.com/api/#retrieve-an-order
 type Cost struct {
-	TransactionID int     `json:"transaction_id"`
+	TransactionID ID      `json:"transaction_id"`
 	Description   string  `json:"description"`
 	Type          string  `json:"type"`
 	Status        string  `json:"status"`
@@ -80,8 +80,8 @@ type GetOrderResponse struct {
 	Response
 
 	Data struct {
-		TransactionID       ID                    `json:"transaction_id"`
-		OrderID             string                 `json:"order_id"`
+		TransactionID       ID                     `json:"transaction_id"`
+		OrderID             ID                     `json:"order_id"`
 		Created             Time                   `json:"created"`
 		Currency            string                 `json:"currency"`
 		Amount              int                    `json:"amount"`
