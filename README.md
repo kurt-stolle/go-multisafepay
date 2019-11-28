@@ -1,6 +1,11 @@
-# Go wrapper for MultiSafePay
+<p align="center">
+  <img src="https://www.multisafepay.com/img/multisafepaylogo.svg" width="400px" position="center">
+</p>
 
-This project is a wrapper for the [MultiSafePay API](https://docs.multisafepay.com/api/) in Go. 
+# Go wrapper for MultiSafePay
+[MultiSafePay](https://www.multisafepay.com/about-us/) is a payment services provider that supports a supports a large number of international payment methods. This package is a wrapper for the [MultiSafePay API](https://docs.multisafepay.com/api/), created with the goal of simplifying and standardizing the integration into Go projects. 
+
+This project is maintained by the MultiSafePay community. There exist a number of wrappers in other programming languages, some maintained by the development team and some by the community, see the page [Plugin integration](https://docs.multisafepay.com/integrations/).
 
 ```go
 import "github.com/kurt-stolle/go-multisafepay/multisafepay"
