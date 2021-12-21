@@ -16,10 +16,11 @@ type ErrorResponse struct {
 
 // PaymentOptions structure, see: https://docs.multisafepay.com/api/#payment-option-object
 type PaymentOptions struct {
-	NotificationURL string `json:"notification_url,omitempty"`
-	RedirectURL     string `json:"redirect_url,omitempty"`
-	CancelURL       string `json:"cancel_url,omitempty"`
-	CloseWindow     string `json:"close_window,omitempty"`
+	NotificationURL    string `json:"notification_url,omitempty"`
+	NotificationMethod string `json:"notification_method,omitempty"`
+	RedirectURL        string `json:"redirect_url,omitempty"`
+	CancelURL          string `json:"cancel_url,omitempty"`
+	CloseWindow        string `json:"close_window,omitempty"`
 }
 
 // Customer structure, see: https://docs.multisafepay.com/api/#customer-object
@@ -104,7 +105,7 @@ type GetOrderResponse struct {
 			Description   string `json:"description"`
 			Modified      Time   `json:"modified"`
 			Status        string `json:"status"`
-			TransactionID ID    `json:"transaction_id"`
+			TransactionID ID     `json:"transaction_id"`
 		} `json:"related_transactions"`
 		PaymentMethods []map[string]interface{} `json:"payment_methods"`
 	}
