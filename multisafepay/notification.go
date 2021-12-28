@@ -1,16 +1,16 @@
 package multisafepay
 
 import (
-	"bytes"
 	"crypto/hmac"
 	"crypto/sha512"
 	"encoding/base64"
+	"encoding/hex"
 	"fmt"
-	"hash"
+	"strings"
 )
 
 // Separator used in the decoded Auth header
-var postNotificationAuthSep = []byte(":")
+var postNotificationAuthSep = ":"
 
 // ValidatePostNotification validates POST-type notifications from MultiSafepay
 // See: https://docs.multisafepay.com/developer/api/notification-url/#post-notification-example
@@ -22,7 +22,7 @@ func ValidatePostNotification(payload string, authHeader string, apiKey string) 
 	}
 
 	// Split the decoded Auth header using the colon as separator
-	splitAuth := bytes.Split(auth, postNotificationAuthSep)
+	splitAuth := strings.Split(string(auth), postNotificationAuthSep)
 	if len(splitAuth) != 2 {
 		return "", fmt.Errorf("auth contents invalid")
 	}
@@ -32,19 +32,19 @@ func ValidatePostNotification(payload string, authHeader string, apiKey string) 
 	authHash := splitAuth[1]
 
 	// Compute SHA512 hash using the website API key as HMAC
-	check := makeHMAC(timestamp, payload, apiKey)
+	check := makeHMAC([]byte(timestamp), payload, apiKey)
 
-	if !hmac.Equal(check.Sum(nil), authHash) {
+	if check != authHash {
 		return "", fmt.Errorf("check rejected")
 	}
 
-	return string(timestamp), nil
+	return timestamp, nil
 }
 
-func makeHMAC(timestamp []byte, payload string, apiKey string) hash.Hash {
+func makeHMAC(timestamp []byte, payload string, apiKey string) string {
 	check := hmac.New(sha512.New, []byte(apiKey))
 	check.Write(timestamp)
-	check.Write(postNotificationAuthSep)
+	check.Write([]byte(postNotificationAuthSep))
 	check.Write([]byte(payload))
-	return check
+	return hex.EncodeToString(check.Sum(nil))
 }
