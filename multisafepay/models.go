@@ -41,6 +41,11 @@ type Customer struct {
 	UserAgent   string `json:"user_agent,omitempty"`
 }
 
+// SecondChange for in Order
+type SecondChance struct {
+	SendEmail bool `json:"send_email"`
+}
+
 // Order structure, see: https://docs.multisafepay.com/api/#orders
 type Order struct {
 	Type           string          `json:"type,omitempty"`
@@ -51,22 +56,23 @@ type Order struct {
 	Description    string          `json:"description,omitempty"`
 	PaymentOptions *PaymentOptions `json:"payment_options,omitempty"`
 	Customer       *Customer       `json:"customer,omitempty"`
-	SecondChance   struct {
-		SendEmail bool `json:"send_email"`
-	} `json:"second_chance"`
+	SecondChance   *SecondChance    `json:"second_chance"`
 }
 
-// PostOrderResponse is a response to POST /orders: https://docs.multisafepay.com/api/#orders
+// PostOrderResponseData is the Data field of PostOrderResponse
+type PostOrderResponseData struct {
+	OrderID    ID     `json:"order_id"`
+	PaymentURL string `json:"payment_url,omitempty"`
+}
+
+// PostOrderResponse is a response to POST /orders
+// Documentation: https://docs.multisafepay.com/api/#orders
 type PostOrderResponse struct {
 	Response
-
-	Data struct {
-		OrderID    ID     `json:"order_id"`
-		PaymentURL string `json:"payment_url,omitempty"`
-	} `json:"data"`
+	Data PostOrderResponseData `json:"data"`
 }
 
-// Cost is a cost as presented in: https://docs.multisafepay.com/api/#retrieve-an-order
+// Cost model (see GetOrderResponse)
 type Cost struct {
 	TransactionID ID      `json:"transaction_id"`
 	Description   string  `json:"description"`
@@ -76,37 +82,43 @@ type Cost struct {
 	Amount        float64 `json:"amount"`
 }
 
-// GetOrderResponse is a response to GET /orders/{order_id}: https://docs.multisafepay.com/api/#retrieve-an-order
+// RelatedTransaction (see GetOrderResponse)
+type RelatedTransaction struct {
+	Amount        int    `json:"amount"`
+	Costs         []Cost `json:"costs"`
+	Created       Time   `json:"created"`
+	Currency      string `json:"currency"`
+	Description   string `json:"description"`
+	Modified      Time   `json:"modified"`
+	Status        string `json:"status"`
+	TransactionID ID     `json:"transaction_id"`
+}
+
+// GetOrderResponseData is the Data field of GetOrderResponse
+type GetOrderResponseData struct {
+	TransactionID       ID                       `json:"transaction_id"`
+	OrderID             ID                       `json:"order_id"`
+	Created             Time                     `json:"created"`
+	Currency            string                   `json:"currency"`
+	Amount              int                      `json:"amount"`
+	Description         string                   `json:"description"`
+	AmountRefunded      int                      `json:"amount_refunded"`
+	Status              string                   `json:"status,omitempty"`
+	FinancialStatus     string                   `json:"financial_status"`
+	Reason              string                   `json:"reason"`
+	ReasonCode          string                   `json:"reason_code"`
+	FastCheckout        string                   `json:"fastcheckout"`
+	Modified            Time                     `json:"modified"`
+	Customer            *Customer                `json:"customer"`
+	PaymentDetails      map[string]interface{}   `json:"payment_details"`
+	Costs               []Cost                   `json:"costs"`
+	RelatedTransactions []RelatedTransaction     `json:"related_transactions"`
+	PaymentMethods      []map[string]interface{} `json:"payment_methods"`
+}
+
+// GetOrderResponse is a response to GET /orders/{order_id}
+// Documentation: https://docs.multisafepay.com/api/#retrieve-an-order
 type GetOrderResponse struct {
 	Response
-
-	Data struct {
-		TransactionID       ID                     `json:"transaction_id"`
-		OrderID             ID                     `json:"order_id"`
-		Created             Time                   `json:"created"`
-		Currency            string                 `json:"currency"`
-		Amount              int                    `json:"amount"`
-		Description         string                 `json:"description"`
-		AmountRefunded      int                    `json:"amount_refunded"`
-		Status              string                 `json:"status,omitempty"`
-		FinancialStatus     string                 `json:"financial_status"`
-		Reason              string                 `json:"reason"`
-		ReasonCode          string                 `json:"reason_code"`
-		FastCheckout        string                 `json:"fastcheckout"`
-		Modified            Time                   `json:"modified"`
-		Customer            *Customer              `json:"customer"`
-		PaymentDetails      map[string]interface{} `json:"payment_details"`
-		Costs               []Cost                 `json:"costs"`
-		RelatedTransactions []struct {
-			Amount        int    `json:"amount"`
-			Costs         []Cost `json:"costs"`
-			Created       Time   `json:"created"`
-			Currency      string `json:"currency"`
-			Description   string `json:"description"`
-			Modified      Time   `json:"modified"`
-			Status        string `json:"status"`
-			TransactionID ID     `json:"transaction_id"`
-		} `json:"related_transactions"`
-		PaymentMethods []map[string]interface{} `json:"payment_methods"`
-	}
+	Data GetOrderResponseData
 }
